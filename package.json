@@ -1,0 +1,29 @@
+{
+  "name": "@osvlabs/cordova-plugin-network-check",
+  "version": "0.0.1",
+  "description": "",
+  "cordova": {
+    "id": "cordova-plugin-network-check",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "plugin",
+    "network",
+    "check",
+    "status"
+  ],
+  "author": "vitta",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osvlabs/network-check"
+  },
+  "bugs": {
+    "url": "https://github.com/osvlabs/network-check/issues"
+  },
+  "homepage": "https://github.com/osvlabs/network-check"
+}
