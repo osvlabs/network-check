@@ -1,6 +1,6 @@
 {
   "name": "@osvlabs/cordova-plugin-network-check",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "cordova": {
     "id": "cordova-plugin-network-check",
