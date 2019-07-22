@@ -140,10 +140,13 @@ public class NetworkCheck extends CordovaPlugin {
             callbackContext.sendPluginResult(pluginResult);
             return true;
         } else if (action.equals(ACTION_INIT_REACH)) {
-            String hostName = args.optString(0);
-            Boolean available = this.getCurrentNetAvailableWithHostName(hostName);
-            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, available);
-            callbackContext.sendPluginResult(pluginResult);
+            cordova.getThreadPool().execute(() -> {
+                String hostName = args.optString(0);
+                Boolean available = getCurrentNetAvailableWithHostName(hostName);
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, available);
+                callbackContext.sendPluginResult(pluginResult);
+            });
+            return true;
         }
         return false;
     }
@@ -349,11 +352,13 @@ public class NetworkCheck extends CordovaPlugin {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnected()) {
+            HttpURLConnection urlc = null;
             try {
                 URL url = new URL(hostName);
-                HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
+                urlc = (HttpURLConnection) url.openConnection();
                 // 5 s.
                 urlc.setConnectTimeout(5 * 1000);
+                urlc.setReadTimeout(5 * 1000);
                 urlc.connect();
                 // 200 = "OK" code (http connection is fine).
                 if (urlc.getResponseCode() > 0) {
@@ -366,6 +371,16 @@ public class NetworkCheck extends CordovaPlugin {
                 return false;
             } catch (IOException e) {
                 return false;
+            } finally {
+                if (urlc != null) {
+                    try {
+                        urlc.getInputStream().close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    urlc.disconnect();
+                    Log.d("VITTA", "关闭连接");
+                }
             }
         }
         return false;

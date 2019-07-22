@@ -18,7 +18,12 @@
     NSString *hostName = [arguments count] > 0 ? arguments[0] : @"";
     NSURL *url = [NSURL URLWithString:hostName];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSURLSession *session = [NSURLSession sharedSession];
+  
+//    NSURLSession *session = [NSURLSession sharedSession];
+      NSURLSessionConfiguration * config = [NSURLSessionConfiguration defaultSessionConfiguration];
+      config.timeoutIntervalForRequest = 5.0;
+      config.allowsCellularAccess = YES;
+      NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
     NSURLSessionDataTask *dataTask = [session
         dataTaskWithRequest:request
           completionHandler:^(NSData *data, NSURLResponse *response,
